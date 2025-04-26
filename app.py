@@ -8,17 +8,26 @@ app = Flask(__name__)
 model = pickle.load(open('rf_model.pkl', 'rb'))
 scaler = pickle.load(open('scaler.pkl', 'rb'))
 
-# 🔵 Add this route for homepage
+# 🔵 Home page with HTML
 @app.route('/')
 def home():
-    return "🚀 Welcome to Cybersecurity Prediction API!"
+    return '''
+    <html>
+      <head>
+        <title>Cybersecurity Prediction API</title>
+      </head>
+      <body style="text-align: center; margin-top: 50px; font-family: Arial;">
+        <h1>🚀 Welcome to Cybersecurity Prediction API!</h1>
+        <p>Use POST request at <code>/predict</code> to get predictions.</p>
+      </body>
+    </html>
+    '''
 
 # Prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
     
-    # Assuming your input will be feature1, feature2, feature3
     input_features = [data['feature1'], data['feature2'], data['feature3']]
     final_features = scaler.transform([input_features])
     prediction = model.predict(final_features)
